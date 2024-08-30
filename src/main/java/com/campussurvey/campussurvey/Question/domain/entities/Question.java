@@ -1,12 +1,20 @@
 package com.campussurvey.campussurvey.Question.domain.entities;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
+import com.campussurvey.campussurvey.Chapter.domain.entities.Chapter;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -35,6 +43,11 @@ public class Question {
 
     @Column(name="question_text", columnDefinition="TEXT")
     private String questionText;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "question_chapters", joinColumns = @JoinColumn(name = "question_id"),
+    inverseJoinColumns = @JoinColumn(name = "chapters_id"))
+    private Set<Chapter> chapters;
 
     public Question() {
     }
@@ -95,6 +108,12 @@ public class Question {
         this.questionText = questionText;
     }
 
-    
+    public Set<Chapter> getChapters() {
+        return chapters;
+    }
+
+    public void setChapters(Set<Chapter> chapters) {
+        this.chapters = chapters;
+    }
 
 }

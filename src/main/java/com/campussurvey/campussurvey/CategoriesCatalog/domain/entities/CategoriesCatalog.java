@@ -22,7 +22,7 @@ import jakarta.persistence.Table;
 public class CategoriesCatalog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="categoirescatalog_id")
+    @Column(name="categoriescatalog_id")
     private Long id;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
@@ -35,7 +35,7 @@ public class CategoriesCatalog {
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "survey_category", joinColumns = @JoinColumn(name = "categoirescatalog_id"),
+    @JoinTable(name = "survey_category", joinColumns = @JoinColumn(name = "categoriescatalog_id"),
     inverseJoinColumns = @JoinColumn(name = "survey_id"))
     private Set<Surveys> surveys;
 
@@ -74,13 +74,9 @@ public class CategoriesCatalog {
         this.name = name;
     }
 
-
-
     public Set<Surveys> getSurveys() {
         return surveys;
     }
-
-
 
     public void setSurveys(Set<Surveys> surveys) {
         this.surveys = surveys;

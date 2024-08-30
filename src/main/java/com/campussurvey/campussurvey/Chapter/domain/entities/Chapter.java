@@ -1,9 +1,10 @@
-package com.campussurvey.campussurvey.Survey.domain.entities;
+package com.campussurvey.campussurvey.Chapter.domain.entities;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import com.campussurvey.campussurvey.CategoriesCatalog.domain.entities.CategoriesCatalog;
+import com.campussurvey.campussurvey.Question.domain.entities.Question;
+import com.campussurvey.campussurvey.Survey.domain.entities.Surveys;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,15 +16,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="surveys")
-public class Surveys {
+@Table(name = "chapters")
+public class Chapter {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="survey_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "chapters_id")
     private Long id;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
@@ -32,25 +34,30 @@ public class Surveys {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @Column(name = "componenthtml", length = 20)
+    @Column(name = "componenthtml", columnDefinition="VARCHAR(20)")
     private String componentHtml;
 
-    @Column(name = "componentreact", length = 20)
+    @Column(name = "componentreact", columnDefinition="VARCHAR(20)")
     private String componentReact;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "chapter_number", columnDefinition="VARCHAR(50)")
+    private String chapterNumber;
 
-    @Column(name = "name", columnDefinition = "TEXT")
-    private String name;
+    @Column(name = "chapter_title", columnDefinition = "VARCHAR(50)")
+    private String chapterTitle;
+
+    @ManyToOne
+    @JoinColumn(name = "survey_id")
+    private Surveys surveys;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "survey_category", joinColumns = @JoinColumn(name = "survey_id"),
-    inverseJoinColumns = @JoinColumn(name = "categoriescatalog_id"))
-    private Set<CategoriesCatalog> categoriesCatalog;
+    @JoinTable(name = "question_chapters", joinColumns = @JoinColumn(name = "chapters_id"),
+    inverseJoinColumns = @JoinColumn(name = "question_id"))
+    private Set<Question> questions;
 
-    public Surveys() {
+    public Chapter() {
     }
+
     public Long getId() {
         return id;
     }
@@ -91,28 +98,36 @@ public class Surveys {
         this.componentReact = componentReact;
     }
 
-    public String getDescription() {
-        return description;
+    public String getChapterNumber() {
+        return chapterNumber;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setChapterNumber(String chapterNumber) {
+        this.chapterNumber = chapterNumber;
     }
 
-    public String getName() {
-        return name;
+    public String getChapterTitle() {
+        return chapterTitle;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setChapterTitle(String chapterTitle) {
+        this.chapterTitle = chapterTitle;
     }
 
-    public Set<CategoriesCatalog> getCategoriesCatalog() {
-        return categoriesCatalog;
+    public Surveys getSurveys() {
+        return surveys;
     }
 
-    public void setCategoriesCatalog(Set<CategoriesCatalog> categoriesCatalog) {
-        this.categoriesCatalog = categoriesCatalog;
-    }   
+    public void setSurveys(Surveys surveys) {
+        this.surveys = surveys;
+    }
+
+    public Set<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
+    }
 
 }
