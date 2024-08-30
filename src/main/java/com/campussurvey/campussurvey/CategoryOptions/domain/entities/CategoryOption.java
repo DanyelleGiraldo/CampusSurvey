@@ -1,4 +1,4 @@
-package com.campussurvey.campussurvey.CategoryOption.domain.entities;
+package com.campussurvey.campussurvey.CategoryOptions.domain.entities;
 import java.time.LocalDateTime;
 
 import com.campussurvey.campussurvey.CategoriesCatalog.domain.entities.CategoriesCatalog;
