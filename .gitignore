@@ -1,5 +1,0 @@
-# Ignorar archivos de configuración de entorno específicos
-src/main/resources/application-dev.properties
-
-# Ignorar archivos generados en la carpeta target
-target/classes/application-dev.properties
