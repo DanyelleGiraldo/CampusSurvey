@@ -26,6 +26,7 @@ public class SurveyServiceImpl implements SurveyInterface {
     }
 
     @Override
+    @Transactional
     public void delete(Surveys surveys) {
         surveyRepository.delete(surveys);
     }
@@ -33,7 +34,7 @@ public class SurveyServiceImpl implements SurveyInterface {
     @Override
     @Transactional
     public void update(Long id, Surveys updatedSurvey) {
-    Optional<Surveys> existingSurveyOpt = surveyRepository.findById(id);
+    Optional<Surveys> existingSurveyOpt = surveyRepository.findById(updatedSurvey.getId());
 
     if (existingSurveyOpt.isPresent()) {
         Surveys existingSurvey = existingSurveyOpt.get();
@@ -51,6 +52,7 @@ public class SurveyServiceImpl implements SurveyInterface {
     }
 }
     @Override
+    @Transactional
     public List<Surveys> findAll() {
         return surveyRepository.findAll();
     }

@@ -35,7 +35,7 @@ public class ChapterServiceImpl implements ChapterInterface {
     @Override
     @Transactional
     public void update(Long id, Chapter updatedChapter) {
-        Optional<Chapter> existingChapterOpt = chapterRepository.findById(id);
+        Optional<Chapter> existingChapterOpt = chapterRepository.findById(updatedChapter.getId());
 
         if (existingChapterOpt.isPresent()) {
             Chapter existingChapter = existingChapterOpt.get();
