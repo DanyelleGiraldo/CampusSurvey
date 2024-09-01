@@ -24,6 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
         return new InMemoryUserDetailsManager(user);
     }
 
+    @SuppressWarnings("deprecation")
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
@@ -36,6 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("");
     }
 
+    @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
