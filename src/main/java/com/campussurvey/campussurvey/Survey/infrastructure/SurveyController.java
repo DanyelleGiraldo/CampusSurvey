@@ -67,7 +67,6 @@ public class SurveyController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Survey not found with id: " + id);
             }
 
-            // Llamar al servicio para actualizar la encuesta
             surveyServiceImpl.update(id, updatedSurveys);
             return ResponseEntity.ok("Survey updated successfully");
         } catch (Exception e) {

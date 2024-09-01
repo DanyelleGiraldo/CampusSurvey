@@ -39,7 +39,6 @@ public class SurveyServiceImpl implements SurveyInterface {
         if (existingSurveyOpt.isPresent()) {
             Surveys existingSurvey = existingSurveyOpt.get();
 
-            // Actualizar los campos de la encuesta existente
             existingSurvey.setCategoriesCatalog(updatedSurvey.getCategoriesCatalog());
             existingSurvey.setDescription(updatedSurvey.getDescription());
             existingSurvey.setName(updatedSurvey.getName());
@@ -47,7 +46,6 @@ public class SurveyServiceImpl implements SurveyInterface {
             existingSurvey.setComponentReact(updatedSurvey.getComponentReact());
             existingSurvey.setUpdatedAt(LocalDateTime.now());
 
-            // Guardar los cambios en el repositorio
             surveyRepository.save(existingSurvey);
         } else {
             throw new EntityNotFoundException("Survey not found with id: " + id);

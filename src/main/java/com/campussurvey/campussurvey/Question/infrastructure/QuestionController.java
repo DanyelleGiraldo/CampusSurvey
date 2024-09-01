@@ -30,6 +30,9 @@ public class QuestionController {
     @Autowired
     private QuestionServiceImp questionServiceImp;
 
+    @Autowired
+    QuestionRepository questionRepository;
+
     @GetMapping
     public List<Question> listAllQuestions(){
         return questionServiceImp.findAll();
@@ -58,6 +61,11 @@ public class QuestionController {
             return validation(result);
         }
         try {
+            Optional<Question> existingQuestionOptional = questionRepository.findById(id);
+            if(existingQuestionOptional.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Survey not found with id: " + id);
+            }
+
             questionServiceImp.update(id, updatedQuestion);
             return ResponseEntity.ok("question updated successfully");
         } catch (EntityNotFoundException e) {
