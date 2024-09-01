@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.campussurvey.campussurvey.Survey.application.SurveyServiceImpl;
 import com.campussurvey.campussurvey.Survey.domain.entities.Surveys;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 
@@ -31,6 +30,9 @@ public class SurveyController {
 
     @Autowired
     private SurveyServiceImpl surveyServiceImpl;
+
+    @Autowired
+    SurveyRepository surveyRepository;
 
     @GetMapping
     public List<Surveys> listAllSurveys() {
@@ -60,14 +62,19 @@ public class SurveyController {
             return validation(result);
         }
         try {
+            Optional<Surveys> existingSurveyOptional = surveyRepository.findById(id);
+            if (existingSurveyOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Survey not found with id: " + id);
+            }
+
+            // Llamar al servicio para actualizar la encuesta
             surveyServiceImpl.update(id, updatedSurveys);
             return ResponseEntity.ok("Survey updated successfully");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating survey: " + e.getMessage());
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSurvey(@PathVariable Long id) {

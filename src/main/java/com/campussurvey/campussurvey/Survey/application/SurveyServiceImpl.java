@@ -34,23 +34,26 @@ public class SurveyServiceImpl implements SurveyInterface {
     @Override
     @Transactional
     public void update(Long id, Surveys updatedSurvey) {
-    Optional<Surveys> existingSurveyOpt = surveyRepository.findById(updatedSurvey.getId());
+        Optional<Surveys> existingSurveyOpt = surveyRepository.findById(id);
 
-    if (existingSurveyOpt.isPresent()) {
-        Surveys existingSurvey = existingSurveyOpt.get();
-        
-        existingSurvey.setCategoriesCatalog(updatedSurvey.getCategoriesCatalog());
-        existingSurvey.setDescription(updatedSurvey.getDescription());
-        existingSurvey.setName(updatedSurvey.getName());
-        existingSurvey.setComponentHtml(updatedSurvey.getComponentHtml());
-        existingSurvey.setComponentReact(updatedSurvey.getComponentReact());
-        existingSurvey.setUpdatedAt(LocalDateTime.now());
-        
-        surveyRepository.save(existingSurvey);
-    } else {
-        throw new EntityNotFoundException("Survey not found with id: " + id);
+        if (existingSurveyOpt.isPresent()) {
+            Surveys existingSurvey = existingSurveyOpt.get();
+
+            // Actualizar los campos de la encuesta existente
+            existingSurvey.setCategoriesCatalog(updatedSurvey.getCategoriesCatalog());
+            existingSurvey.setDescription(updatedSurvey.getDescription());
+            existingSurvey.setName(updatedSurvey.getName());
+            existingSurvey.setComponentHtml(updatedSurvey.getComponentHtml());
+            existingSurvey.setComponentReact(updatedSurvey.getComponentReact());
+            existingSurvey.setUpdatedAt(LocalDateTime.now());
+
+            // Guardar los cambios en el repositorio
+            surveyRepository.save(existingSurvey);
+        } else {
+            throw new EntityNotFoundException("Survey not found with id: " + id);
+        }
     }
-}
+
     @Override
     @Transactional
     public List<Surveys> findAll() {

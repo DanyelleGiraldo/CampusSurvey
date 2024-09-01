@@ -1,4 +1,4 @@
-package com.campussurvey.campussurvey;
+package com.campussurvey.campussurvey.User.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

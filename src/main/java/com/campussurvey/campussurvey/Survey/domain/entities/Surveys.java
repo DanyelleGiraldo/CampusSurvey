@@ -32,10 +32,10 @@ public class Surveys {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @Column(name = "componenthtml", length = 20)
+    @Column(name = "componenthtml", columnDefinition="VARCHAR(255)")
     private String componentHtml;
 
-    @Column(name = "componentreact", length = 20)
+    @Column(name = "componentreact", columnDefinition="VARCHAR(255)")
     private String componentReact;
 
     @Column(name = "description", columnDefinition = "TEXT")
