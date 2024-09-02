@@ -1,6 +1,8 @@
-package com.campussurvey.campussurvey.User.domain.entities;
+package com.campussurvey.campussurvey.Role.domain.entities;
 
 import java.util.Set;
+
+import com.campussurvey.campussurvey.User.domain.entities.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,9 +15,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Table(name = "roles", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) })
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,30 +41,5 @@ public class Role {
     inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users;
 
-    public Role() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
+    
 }
