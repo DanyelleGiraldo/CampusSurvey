@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import static org.springframework.security.config.Customizer.withDefaults;
-
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,12 +32,12 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(authRequest -> authRequest
                 .requestMatchers("/auth/**").permitAll() 
+                .requestMatchers("/admin/**").hasRole("ADMIN")  
                 .anyRequest().authenticated()
             )  
             .sessionManagement(sessionManager ->
                 sessionManager
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 

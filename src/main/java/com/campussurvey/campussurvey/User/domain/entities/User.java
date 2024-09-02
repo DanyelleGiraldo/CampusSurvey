@@ -1,6 +1,8 @@
 package com.campussurvey.campussurvey.User.domain.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,16 +53,21 @@ public class User implements UserDetails {
     @Column(columnDefinition = "VARCHAR(255)")
      String password;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), 
-               inverseJoinColumns = @JoinColumn(name = "role_id"))
-     Set<Role> roles;
+     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "users_roles", 
+        joinColumns = @JoinColumn(name = "user_id"), 
+        inverseJoinColumns = @JoinColumn(name = "role_id"), 
+        uniqueConstraints = {@UniqueConstraint(columnNames = { "user_id", "role_id" }) })
+    private List<Role> roles;  
 
-    @Override
+     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                    .map(role -> new SimpleGrantedAuthority(role.getName()))
-                    .collect(Collectors.toList());
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return authorities;
     }
 
     @Override
