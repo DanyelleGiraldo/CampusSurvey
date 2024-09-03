@@ -36,7 +36,7 @@ public class AuthService {
         String role = user.getRoles().stream()
                            .findFirst()
                            .map(Role::getName)
-                           .orElse("UNKNOWN_ROLE");
+                           .orElse("USER");
     
         return AuthResponse.builder()
             .token(token)
