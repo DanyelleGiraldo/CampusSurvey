@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,10 +53,9 @@ public class AuthService {
             throw new IllegalArgumentException("Password cannot be null or empty");
         }
         
-        // Encode the password
+
         String encodedPassword = passwordEncoder.encode(request.getPassword());
     
-        // Validate and assign roles
         Set<Role> userRoles = new HashSet<>();
         for (String roleName : request.getRoles()) {
             Role role = roleRepository.findByName(roleName)
@@ -65,21 +63,20 @@ public class AuthService {
             userRoles.add(role);
         }
     
-        // Convert Set<Role> to List<Role>
-        List<Role> rolesList = List.copyOf(userRoles);  // You can also use new ArrayList<>(userRoles);
+        List<Role> rolesList = List.copyOf(userRoles);  
     
-        // Create and save the user
+        
         User user = User.builder()
             .username(request.getUsername())
             .password(encodedPassword)
             .address(request.getAddress())
-            .roles(rolesList)  // Now passing a List<Role>
+            .roles(rolesList)  
             .enabled(true)
             .build();
     
         userRepository.save(user);
     
-        // Generate and return the authentication token
+        
         return AuthResponse.builder()
             .token(jwtService.getToken(user))
             .build();

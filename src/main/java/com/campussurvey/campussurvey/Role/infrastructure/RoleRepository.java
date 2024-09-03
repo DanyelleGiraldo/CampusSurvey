@@ -8,5 +8,4 @@ import com.campussurvey.campussurvey.Role.domain.entities.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
         Optional<Role> findByName(String name); 
-
 }
