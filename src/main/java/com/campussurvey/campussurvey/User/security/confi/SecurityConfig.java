@@ -41,7 +41,7 @@ public class SecurityConfig {
             .authenticationProvider(authProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
-            .formLogin(withDefaults())
+            // .formLogin(withDefaults())
             .build();
     }
 
