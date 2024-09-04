@@ -1,6 +1,5 @@
 package com.campussurvey.campussurvey.User.security.confi;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -9,9 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import com.campussurvey.campussurvey.User.security.confi.jwt.JwtAuthenticationFilter;
-
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -19,29 +16,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-            private final JwtAuthenticationFilter jwtAuthenticationFilter;
-            private final AuthenticationProvider authProvider;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final AuthenticationProvider authProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-            .csrf(csrf->
-                csrf
-                .disable()
-            )
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authRequest -> authRequest
-                .requestMatchers("/auth/**").permitAll() 
-                .requestMatchers("/admin/**").hasRole("ADMIN")  
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/api/**").hasAuthority("USER")
+                .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
-            )  
-            .sessionManagement(sessionManager ->
-                sessionManager
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            )
+            .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-
-            // .formLogin(withDefaults())
             .build();
     }
-
 }
