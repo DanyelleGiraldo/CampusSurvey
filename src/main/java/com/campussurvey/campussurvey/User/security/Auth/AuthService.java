@@ -36,7 +36,7 @@ public class AuthService {
         String role = user.getRoles().stream()
                            .findFirst()
                            .map(Role::getName)
-                           .orElse("USER");
+                           .orElse("Unkown_role");
     
         return AuthResponse.builder()
             .token(token)
@@ -47,38 +47,32 @@ public class AuthService {
     public AuthResponse register(LoginRequest request) {
         Role userRole = roleRepository.findByName("USER")
                 .orElseThrow(() -> new RuntimeException("Rol USER no encontrado"));
+        
         System.out.println("Received registration request: " + request);
     
         if (request.getPassword() == null || request.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Password cannot be null or empty");
         }
-        
-
+    
         String encodedPassword = passwordEncoder.encode(request.getPassword());
     
         Set<Role> userRoles = new HashSet<>();
-        for (String roleName : request.getRoles()) {
-            Role role = roleRepository.findByName(roleName)
-                    .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
-            userRoles.add(role);
-        }
-    
-        List<Role> rolesList = List.copyOf(userRoles);  
-    
+        userRoles.add(userRole);
         
         User user = User.builder()
             .username(request.getUsername())
             .password(encodedPassword)
             .address(request.getAddress())
-            .roles(rolesList)  
+            .roles(List.copyOf(userRoles))  
             .enabled(true)
             .build();
     
-        userRepository.save(user);
+            userRepository.save(user);
     
-        
+        String token = jwtService.getToken(user);
+    
         return AuthResponse.builder()
-            .token(jwtService.getToken(user))
+            .token(token)
             .build();
     }
     
