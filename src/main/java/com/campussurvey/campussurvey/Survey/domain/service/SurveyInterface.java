@@ -9,5 +9,5 @@ public interface SurveyInterface {
     void delete(Surveys surveys);
     void update(Long id, Surveys updatedSurvey);
     List<Surveys>  findAll();
-    
+    Surveys assignCategoriesToSurvey(Long surveyId, List<Long> categoryIds);
 }

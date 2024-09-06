@@ -1,12 +1,16 @@
 package com.campussurvey.campussurvey.Survey.application;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.campussurvey.campussurvey.CategoriesCatalog.domain.entities.CategoriesCatalog;
+import com.campussurvey.campussurvey.CategoriesCatalog.infrastructure.CategoriesCatalogRepository;
 import com.campussurvey.campussurvey.Survey.domain.entities.Surveys;
 import com.campussurvey.campussurvey.Survey.domain.service.SurveyInterface;
 import com.campussurvey.campussurvey.Survey.infrastructure.SurveyRepository;
@@ -18,6 +22,9 @@ import jakarta.transaction.Transactional;
 public class SurveyServiceImpl implements SurveyInterface {
     @Autowired
     SurveyRepository surveyRepository;
+
+    @Autowired
+    private CategoriesCatalogRepository categoriesCatalogRepository;
 
     @Override
     @Transactional
@@ -58,5 +65,27 @@ public class SurveyServiceImpl implements SurveyInterface {
         return surveyRepository.findAll();
     }
 
+    
+    @Override
+    @Transactional
+    public Surveys assignCategoriesToSurvey(Long surveyId,  List<Long> categoryIds) {
+        Optional<Surveys> optionalSurvey = surveyRepository.findById(surveyId);
+        if (!optionalSurvey.isPresent()) {
+            throw new RuntimeException("Survey not found");
+        }
+
+        Surveys survey = optionalSurvey.get();
+
+        List<CategoriesCatalog> categoryList = categoriesCatalogRepository.findAllById(categoryIds);
+        Set<CategoriesCatalog> categorySet = new HashSet<>(categoryList);
+        survey.setCategoriesCatalog(categorySet);
+
+        return surveyRepository.save(survey);
+
+    }
+
+    
+
+    
     
 }

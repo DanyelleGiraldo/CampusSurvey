@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.campussurvey.campussurvey.Chapter.application.ChapterServiceImpl;
 import com.campussurvey.campussurvey.Chapter.domain.entities.Chapter;
+import com.campussurvey.campussurvey.Survey.domain.entities.Surveys;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -73,6 +75,19 @@ public class ChapterController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/assignSurvey")
+    public ResponseEntity<?> assignChaptersToSurvey(
+        @RequestParam Long surveyId, 
+        @RequestBody List<Long> chapterIds) {
+        
+        try {
+            Surveys updatedSurvey = chapterServiceImpl.assingChaptersToSurvey(surveyId, chapterIds);
+            return ResponseEntity.ok(updatedSurvey);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 

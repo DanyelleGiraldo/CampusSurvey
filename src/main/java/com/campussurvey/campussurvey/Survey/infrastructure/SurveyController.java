@@ -89,4 +89,9 @@ public class SurveyController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting survey: " + e.getMessage());
         }
     }
+
+    @PostMapping("/{surveyId}/categories")
+    public Surveys assignCategoriesToSurvey(@PathVariable Long surveyId, @RequestBody List<Long> categoryIds) {
+        return surveyServiceImpl.assignCategoriesToSurvey(surveyId, categoryIds);
+    }
 }
