@@ -50,7 +50,7 @@ public class ChapterController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createChapter(@PathVariable Long surveyId, @Valid @RequestBody Chapter chapter, BindingResult result) {
+    public ResponseEntity<?> createChapter(@RequestParam Long surveyId, @Valid @RequestBody Chapter chapter, BindingResult result) {
         if (result.hasErrors()) {
             return validation(result);
         }
@@ -68,6 +68,7 @@ public class ChapterController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Survey not found");
         }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateChapter(@PathVariable Long id, @Valid @RequestBody Chapter chapter, BindingResult result) {
