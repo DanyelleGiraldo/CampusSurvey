@@ -65,6 +65,11 @@ public class SurveyServiceImpl implements SurveyInterface {
         return surveyRepository.findAll();
     }
 
+    @Override
+    public Optional<Surveys> findById(Long id) {
+        return surveyRepository.findById(id);
+    }
+
     
     @Override
     @Transactional

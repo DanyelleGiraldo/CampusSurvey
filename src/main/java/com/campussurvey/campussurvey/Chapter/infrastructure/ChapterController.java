@@ -3,6 +3,7 @@ package com.campussurvey.campussurvey.Chapter.infrastructure;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.campussurvey.campussurvey.Chapter.application.ChapterServiceImpl;
 import com.campussurvey.campussurvey.Chapter.domain.entities.Chapter;
+import com.campussurvey.campussurvey.Survey.application.SurveyServiceImpl;
 import com.campussurvey.campussurvey.Survey.domain.entities.Surveys;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -30,6 +32,9 @@ import jakarta.validation.Valid;
 public class ChapterController {
     @Autowired
     private ChapterServiceImpl chapterServiceImpl;
+
+    @Autowired
+    private SurveyServiceImpl surveyServiceImpl;
 
     private ResponseEntity<?> validation(BindingResult result) {
         Map<String, String> errors = new HashMap<>();
@@ -45,12 +50,23 @@ public class ChapterController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createChapter(@Valid @RequestBody Chapter chapter, BindingResult result) {
+    public ResponseEntity<?> createChapter(@PathVariable Long surveyId, @Valid @RequestBody Chapter chapter, BindingResult result) {
         if (result.hasErrors()) {
             return validation(result);
         }
-        chapterServiceImpl.save(chapter);
-        return ResponseEntity.status(HttpStatus.CREATED).body(chapter);
+        try {
+            Optional<Surveys> optionalSurvey = surveyServiceImpl.findById(surveyId); 
+            if (optionalSurvey.isPresent()) {
+                Surveys survey = optionalSurvey.get(); 
+                chapter.setSurveys(survey);  
+                chapterServiceImpl.save(chapter);
+                return ResponseEntity.status(HttpStatus.CREATED).body(chapter);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Survey not found with id: " + surveyId);
+            }
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Survey not found");
+        }
     }
 
     @PutMapping("/{id}")
